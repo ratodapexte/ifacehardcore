@@ -146,7 +146,7 @@ public class Iface
         matrix[lineIndex][columnIndex] = null;
     }
 
-    public static boolean isUserMemberOf(int[][] matrix, String name[], int index)
+    public static boolean isUserMemberOf(int[][] matrix, String name[], String[] description, int index)
     {
         boolean result = false;
         System.out.println("***** Comunidades *****");
@@ -156,7 +156,7 @@ public class Iface
             {
                 if (matrix[i][j] == index)
                 {
-                    System.out.println(i + " - " + name[i]);
+                    System.out.println(i + " - " + name[i] + " : " + description[i]);
                     result = true;
                 }
             }
@@ -211,12 +211,6 @@ public class Iface
         }
     }
 
-    public static void communityOperations(String[] comunityName, String[] oldAttributeDescription,
-               int[][] communityMembers, int[][] communityPendingMembers, String[][] communityMessages)
-    {
-
-    }
-
     public static void main(String[] args)
     {
         Scanner scanner = new Scanner(System.in);
@@ -226,11 +220,7 @@ public class Iface
         String[][] attribute = new String[100][100], attributeDescription = new String[100][100];
         String[][][] messages = new String[100][100][100];
 
-        String[][] oldAttribute = new String[100][10], oldAttributeDescription = new String[100][10];
-        String[][] oldCommunity = new String[100][100];
-        int[] oldFriends = new int[10];
-
-        String[] comunityName = new String[100], communityAdm = new String[100];
+        String[] comunityName = new String[100], communityAdm = new String[100], communityDescription = new String[100];
         int[][] communityMembers = new int[100][100], communityPendingMembers = new int[100][100];
         String[][] communityMessages = new String[100][100];
 
@@ -264,7 +254,7 @@ public class Iface
                     while(index != -1)
                     {
                         System.out.println("*****Bem vindo " + name[index] + "*****");
-                        System.out.printf("Menu:%n1 - perfil%n2 - Amigos%n3 - Comunidade%nOpcao: ");
+                        System.out.printf("Menu:%n1 - perfil%n2 - Amigos%n3 - Comunidade%n4 - Deletar conta%nOpcao: ");
 
                         int choiceLog = scanner.nextInt();
                         scanner.nextLine();
@@ -441,7 +431,7 @@ public class Iface
                                         String commuName;
 
                                         System.out.printf("1 - Participar de comunidade%n2 - Gerenciar ou criar%n" +
-                                                "3 - Mandar mensagem");
+                                                "3 - Mandar mensagem%n4 - Ver mensagens%nOpcao: ");
                                         comuChoice = scanner.nextInt();
                                         scanner.nextLine();
 
@@ -496,7 +486,7 @@ public class Iface
 
                                                             if(communityPendingMembers[communintyIndex][indexComu] != 0)
                                                             {
-                                                                addIntOnMatrix(communityMembers, communityPendingMembers[communintyIndex][indexComu], indexComu);
+                                                                addIntOnMatrix(communityMembers, communintyIndex, communityPendingMembers[communintyIndex][indexComu]);
                                                                 System.out.println("Membro adicionado!");
                                                             }
                                                             else
@@ -537,6 +527,10 @@ public class Iface
                                                         commuName = scanner.nextLine();
                                                     }
 
+                                                    System.out.println("Descricao da comunidade");
+                                                    String communityDscpt = scanner.nextLine();
+
+                                                    addStringOnString(communityDescription, communityDscpt);
                                                     addStringOnString(comunityName, commuName);
                                                     addStringOnString(communityAdm, name[index]);
 
@@ -544,7 +538,7 @@ public class Iface
                                                 }
                                                 break;
                                             case 3:
-                                                if(isUserMemberOf(communityMembers, comunityName, index))
+                                                if(isUserMemberOf(communityMembers, comunityName, communityDescription, index))
                                                 {
                                                     System.out.println("Indice da comunidade");
                                                     comuChoice = scanner.nextInt();
@@ -563,6 +557,32 @@ public class Iface
                                                     }
                                                     else
                                                         System.out.println("Comunidade inexistente!");
+                                                }
+                                                break;
+                                            case 4:
+                                                System.out.println("***** Ver mensagens de comunidade *****");
+                                                if(isUserMemberOf(communityMembers, comunityName, communityDescription, index))
+                                                {
+                                                    System.out.println("Indice da comunidade");
+                                                    comuChoice = scanner.nextInt();
+                                                    scanner.nextLine();
+
+                                                    if (comunityName[comuChoice] != null)
+                                                    {
+                                                        if(isUserAdded(communityMembers[comuChoice], index))
+                                                        {
+                                                            for (int i = 0; i < communityMessages[comuChoice].length; i++)
+                                                            {
+                                                                if (communityMessages[comuChoice][i] != null)
+                                                                    System.out.println(communityMessages[comuChoice][i]);
+                                                            }
+                                                        }
+                                                        else
+                                                            System.out.println("Você não pertence a comunidade");
+                                                    }
+                                                    else
+                                                        System.out.println("Comunidade inexistente!");
+
                                                 }
                                                 break;
                                         }
